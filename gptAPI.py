@@ -7,6 +7,14 @@ import text2emotion
 import emoji
 import asyncio
 
+from gtts import gTTS
+from playsound import playsound
+
+from pydub import AudioSegment
+from pydub.playback import play
+
+import subprocess
+
 
 keyFile = open("key.txt","r")
 openai.api_key = keyFile.readline().replace("\n","")
@@ -81,8 +89,19 @@ def getBestResponse(response):
 
     return bestResponse
 
+def singleton(prompt):
+    prompt = editPrompt(prompt)
+        
+    response = generate_gpt3_response(prompt,n=3)
+    response = getBestResponse(response)
+    var = gTTS(text = response,lang = 'en')
+    var.save('file.mp3')
+    audio_file = "file.mp3"
 
-async def defaultPipeline(index):
+    return_code = subprocess.call(["afplay", audio_file])
+
+
+def defaultPipeline(index):
     #Take in text from transcriber
     #Potentially generate prompt from it? Or that is the prompt
     #edit prompt
@@ -102,21 +121,24 @@ async def defaultPipeline(index):
 
 
     #await defaultPipeline(len(text)-1)
-    if len(text) >= 10:
+    if text != "":
         prompt = text
         prompt = editPrompt(prompt)
         response = generate_gpt3_response(prompt,n=3)
         response = getBestResponse(response)
         print("Prompt: " + prompt + "\n" + "Response:" + response)
-        #return response
+        #return responsie
+	
+	
+
+	
+
+	
+
+
+def main():
+    defaultPipeline()
     
-
-
-async def main():
-    try:
-        await defaultPipeline(0)
-    except:
-        pass
 
 
 if __name__ == "__main__":
