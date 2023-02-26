@@ -3,6 +3,14 @@ import speech_recognition as sr
 import gpt3API.gptAPI as gpt
 import os
 
+from gtts import gTTS 
+from playsound import playsound 
+text = "This is in english language" 
+
+from pydub import AudioSegment
+from pydub.playback import play
+
+
 app = Flask(__name__)
 
 
@@ -25,14 +33,18 @@ def index():
             with audioFile as source:
                 data = recognizer.record(source)
             transcript = gpt.generate_gpt3_response(recognizer.recognize_google(data, key=None))[0]
+            var = gTTS(text = transcript.text,lang = 'en')
+            var.save('./static/music/file.mp3')
+            songs = os.listdir('static/music')
 
 
     
     
         
-        return render_template('index.html', transcript=transcript.text)
-    songs = os.listdir('static/music')
-    return render_template('index.html', transcript="GET REQUEST",songs=songs)
+        return render_template('index.html', transcript=transcript.text,songs=songs)
+    
+    
+   
     
 
 if __name__ == "__main__":
