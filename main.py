@@ -8,6 +8,14 @@ from aiohttp_wsgi import WSGIHandler
 
 from typing import Dict, Callable
 
+import subprocess
+import os
+import inspect
+from flask import Flask
+from flask import Response
+
+
+
 
 load_dotenv()
 
@@ -41,7 +49,8 @@ async def connect_to_deepgram(transcript_received_handler: Callable[[Dict], None
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    song = os.listdir('static/music')[0]
+    return render_template('index.html',song=song)
 
 async def socket(request):
     ws = web.WebSocketResponse()
@@ -52,6 +61,8 @@ async def socket(request):
     while True:
         data = await ws.receive_bytes()
         deepgram_socket.send(data)
+        
+
 
   
 

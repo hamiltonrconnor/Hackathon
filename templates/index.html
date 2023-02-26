@@ -2,9 +2,15 @@
 <html>
    <head>
        <title>Live Transcription</title>
+	<script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
    </head>
    <body>
-        <h1>Transcribe Audio With Flask 2.0</h1>
+	<audio controls>
+        	<source src="{{url_for('static', filename='file.mp3')}}" type="audio/mp3">
+    	</audio>
+	<img src="/static/temp.jpg">
+	<img src="{{url_for('static', filename='temp.jpg')}}" />
+<h1>Transcribe Audio With Flask 2.0</h1>
         <p id="status">Connection status will go here</p>
         <p id="transcript"></p>
 
@@ -33,17 +39,17 @@
                 const received = message.data
                 if (received) {
                     document.querySelector('#transcript').textContent +=  ' ' + message.data
-                  
+
 
                 }
 
            }
 
            })
-          
 
 
-        
+
+
         </script>
    
    </body>
