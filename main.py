@@ -44,7 +44,8 @@ async def connect_to_deepgram(transcript_received_handler: Callable[[Dict], None
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    song = os.listdir('static/music')[0]
+    return render_template('index.html',song=song)
 
 async def socket(request):
     ws = web.WebSocketResponse()
