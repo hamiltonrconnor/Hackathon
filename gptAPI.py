@@ -5,6 +5,7 @@ import nltk
 nltk.download("vader_lexicon")
 import text2emotion
 import emoji
+import asyncio
 
 
 keyFile = open("key.txt","r")
@@ -81,34 +82,44 @@ def getBestResponse(response):
     return bestResponse
 
 
-def defaultPipeline(transciption):
+async def defaultPipeline():
     #Take in text from transcriber
     #Potentially generate prompt from it? Or that is the prompt
     #edit prompt
     #get responses
     #choose best response
     #Potentially edit the response?
-    prompt = transciption
-    prompt = editPrompt(prompt)
-    response = generate_gpt3_response(prompt,n=3)
-    response = getBestResponse(response)
-    return response
+    transcriptionFile = open("log.csv","r")
+    firstLine = transcriptionFile.readline()
+    transcriptionFile.close()
+    print(firstLine)
+    await asyncio.sleep(4)
+    
+    await defaultPipeline()
+
+    #prompt = transcription
+    #prompt = editPrompt(prompt)
+    #response = generate_gpt3_response(prompt,n=3)
+    #response = getBestResponse(response)
+    #return response
 
 
-
+async def main():
+    await defaultPipeline()
 
 
 if __name__ == "__main__":
-    print("Starting")
-    prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
-    prompt = editPrompt(prompt)
-    print("New prompt: " + prompt)
+    asyncio.run(main())
+    #print("Starting")
+    #prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
+    #prompt = editPrompt(prompt)
+    #print("New prompt: " + prompt)
 
-    response = generate_gpt3_response(prompt)
-    print("Got response")
+    #response = generate_gpt3_response(prompt)
+    #print("Got response")
 
-    bestResponse = getBestResponse(response)
-    print("Best response is: ")
-    print(bestResponse)
+    #bestResponse = getBestResponse(response)
+    #print("Best response is: ")
+    #print(bestResponse)
 
-    print("Complete")
+    #print("Complete")
