@@ -3,6 +3,8 @@ import openai
 from nltk.sentiment import SentimentIntensityAnalyzer
 import nltk
 nltk.download("vader_lexicon")
+import text2emotion
+import emoji
 
 
 keyFile = open("key.txt","r")
@@ -31,8 +33,29 @@ def generate_gpt3_response(user_text, print_output=False,token_cap=400):
 
     # Return the first choice's text
     return completions.choices
+
+def getPromptSentiment(prompt):
+    emotions = text2emotion.get_emotion(prompt)
+    print('"' + prompt + '"' + " has the following emotions: " + str(emotions))
+    strongestEmotion = max(emotions, key=emotions.get)
+    return(strongestEmotion)
+
 def editPrompt(prompt):
-    edittedPrompt = "Answer the following in a cheerful and uplifting way: " + prompt
+    promptSentiment = getPromptSentiment(prompt)
+    print("Prompt sentiment: " + promptSentiment)
+    prePrompt = ""
+    if promptSentiment == "Happy":
+        prePrompt = "Answer the following in a cheerful and upbeat way: "
+    elif promptSentiment == "Angry":
+        prePrompt = "Answer the following in a understanding and sympathetic way: "
+    elif promptSentiment == "Suprise":
+        prePrompt = "Answer the following in a calming way: "
+    elif promptSentiment == "Sad":
+        prePrompt = "Answer the following in a cheerful and uplifting way: "
+    elif promptSentiment == "Fear":
+        prePrompt = "Answer the following in a comforting and reassuring way: "   
+
+    edittedPrompt = prePrompt + prompt
     return edittedPrompt
 
 def getSentiment(responseText):
@@ -41,8 +64,10 @@ def getSentiment(responseText):
     return(sentiment["compound"])
 
 print("Starting")
-prompt = "What will it be like after I'm gone?"
+prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
 prompt = editPrompt(prompt)
+print("New prompt: " + prompt)
+
 response = generate_gpt3_response(prompt)
 print("Got response")
 
