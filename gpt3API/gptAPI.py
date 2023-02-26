@@ -1,8 +1,9 @@
 import os
 import openai
 
+
 keyFile = open("key.txt","r")
-openai.api_key = keyFile.readline()
+openai.api_key = keyFile.readline().replace("\n","")
 
 keyFile.close()
 
