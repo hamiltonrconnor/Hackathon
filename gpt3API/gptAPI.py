@@ -3,6 +3,7 @@ import openai
 
 keyFile = open("key.txt","r")
 openai.api_key = keyFile.readline()
+
 keyFile.close()
 
 def generate_gpt3_response(user_text, print_output=False,token_cap=400):
@@ -16,7 +17,7 @@ def generate_gpt3_response(user_text, print_output=False,token_cap=400):
         temperature=0.5,            # Level of creativity in the response
         prompt=user_text,           # What the user typed in
         max_tokens=token_cap,             # Maximum tokens in the prompt AND response
-        n=1,                        # The number of completions to generate
+        n=3,                        # The number of completions to generate
         stop=None,                  # An optional setting to control response generation
     )
 
@@ -25,7 +26,7 @@ def generate_gpt3_response(user_text, print_output=False,token_cap=400):
     #    print(completions)
 
     # Return the first choice's text
-    return completions.choices[0].text
+    return completions.choices
 
 
 
@@ -34,7 +35,10 @@ prompt = "How good are you at holding conversations?"
 response = generate_gpt3_response(prompt)
 print("Got response")
 
-
-print(response)
+count = 1
+for each in response:
+    print("Response: " + str(count))
+    print(each.text)
+    count += 1
 
 print("Complete")
