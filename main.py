@@ -8,6 +8,8 @@ from aiohttp_wsgi import WSGIHandler
 
 from typing import Dict, Callable
 
+import gptAPI
+
 
 load_dotenv()
 
@@ -21,6 +23,7 @@ async def process_audio(fast_socket: web.WebSocketResponse):
             transcript = data['channel']['alternatives'][0]['transcript']
             with open('log.csv','a') as fd:
                 fd.write(transcript)
+                fd.write("\n")
         
             if transcript:
                 await fast_socket.send_str(transcript)
@@ -49,9 +52,13 @@ async def socket(request):
 
     deepgram_socket = await process_audio(ws)
 
+
+
     while True:
         data = await ws.receive_bytes()
         deepgram_socket.send(data)
+        
+        await (gptAPI.main())
 
   
 

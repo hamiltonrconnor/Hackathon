@@ -82,30 +82,40 @@ def getBestResponse(response):
     return bestResponse
 
 
-async def defaultPipeline():
+async def defaultPipeline(index):
     #Take in text from transcriber
     #Potentially generate prompt from it? Or that is the prompt
     #edit prompt
     #get responses
     #choose best response
     #Potentially edit the response?
-    transcriptionFile = open("log.csv","r")
-    firstLine = transcriptionFile.readline()
+    transcriptionFile = open("log.csv","r+")
+    text = transcriptionFile.read()
+    transcriptionFile.truncate(0)
     transcriptionFile.close()
-    print(firstLine)
-    await asyncio.sleep(4)
-    
-    await defaultPipeline()
+    #print("INDEX IS: " + str(index))
+    #print("len(text) is: " + str(len(text)))
+    #if index == len(text)-1:
+    #    #print("Nothing new")
+    #else:
+    #    print(text[index:len(text)])
 
-    #prompt = transcription
-    #prompt = editPrompt(prompt)
-    #response = generate_gpt3_response(prompt,n=3)
-    #response = getBestResponse(response)
-    #return response
+
+    #await defaultPipeline(len(text)-1)
+    if text != "":
+        prompt = text
+        prompt = editPrompt(prompt)
+        response = generate_gpt3_response(prompt,n=3)
+        response = getBestResponse(response)
+        print("Prompt: " + prompt + "\n" + "Response:" + response)
+        #return response
 
 
 async def main():
-    await defaultPipeline()
+    try:
+        await defaultPipeline(0)
+    except:
+        pass
 
 
 if __name__ == "__main__":
