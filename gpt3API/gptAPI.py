@@ -63,32 +63,35 @@ def getSentiment(responseText):
     sentiment = sia.polarity_scores(responseText)
     return(sentiment["compound"])
 
-print("Starting")
-prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
-prompt = editPrompt(prompt)
-print("New prompt: " + prompt)
-
-response = generate_gpt3_response(prompt)
-print("Got response")
 
 
-count = 1
+if __name__ == "__main__":
+    print("Starting")
+    prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
+    prompt = editPrompt(prompt)
+    print("New prompt: " + prompt)
 
-bestResponse = ""
-bestSentimentScore = -2 #All responses will be (-1 - 1)
+    response = generate_gpt3_response(prompt)
+    print("Got response")
 
-for each in response:
-    responseText = each.text
-    print("Response: " + str(count))
-    print(responseText)
-    sentimentScore = getSentiment(responseText)
-    print("Sentiment score: " + str(sentimentScore))
-    if (sentimentScore > bestSentimentScore):
-        bestSentimentScore = sentimentScore
-        bestResponse = responseText
-    count += 1
 
-print("Best response is: ")
-print(bestResponse)
+    count = 1
 
-print("Complete")
+    bestResponse = ""
+    bestSentimentScore = -2 #All responses will be (-1 - 1)
+
+    for each in response:
+        responseText = each.text
+        print("Response: " + str(count))
+        print(responseText)
+        sentimentScore = getSentiment(responseText)
+        print("Sentiment score: " + str(sentimentScore))
+        if (sentimentScore > bestSentimentScore):
+            bestSentimentScore = sentimentScore
+            bestResponse = responseText
+        count += 1
+
+    print("Best response is: ")
+    print(bestResponse)
+
+    print("Complete")
