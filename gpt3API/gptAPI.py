@@ -31,6 +31,9 @@ def generate_gpt3_response(user_text, print_output=False,token_cap=400):
 
     # Return the first choice's text
     return completions.choices
+def editPrompt(prompt):
+    edittedPrompt = "Answer the following in a cheerful and uplifting way: " + prompt
+    return edittedPrompt
 
 def getSentiment(responseText):
     sia = SentimentIntensityAnalyzer()
@@ -39,6 +42,7 @@ def getSentiment(responseText):
 
 print("Starting")
 prompt = "What will it be like after I'm gone?"
+prompt = editPrompt(prompt)
 response = generate_gpt3_response(prompt)
 print("Got response")
 
