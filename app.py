@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import speech_recognition as sr
+import gpt3API.gptAPI as gpt
 
 app = Flask(__name__)
 
@@ -22,9 +23,9 @@ def index():
             audioFile = sr.AudioFile(file)
             with audioFile as source:
                 data = recognizer.record(source)
-            transcript = recognizer.recognize_google(data, key=None)
+            transcript = gpt.generate_gpt3_response(recognizer.recognize_google(data, key=None))[0]
 
-    return render_template('index.html', transcript=transcript)
+    return render_template('index.html', transcript=transcript.text)
 
 
 if __name__ == "__main__":

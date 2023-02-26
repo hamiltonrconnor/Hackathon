@@ -1,7 +1,7 @@
 import os
 import openai
 
-keyFile = open("key.txt","r")
+keyFile = open("gpt3API/key.txt","r")
 openai.api_key = keyFile.readline()
 
 keyFile.close()
