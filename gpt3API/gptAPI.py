@@ -1,5 +1,8 @@
 import os
 import openai
+from nltk.sentiment import SentimentIntensityAnalyzer
+import nltk
+nltk.download("vader_lexicon")
 
 
 keyFile = open("key.txt","r")
@@ -29,17 +32,34 @@ def generate_gpt3_response(user_text, print_output=False,token_cap=400):
     # Return the first choice's text
     return completions.choices
 
-
+def getSentiment(responseText):
+    sia = SentimentIntensityAnalyzer()
+    sentiment = sia.polarity_scores(responseText)
+    return(sentiment["compound"])
 
 print("Starting")
-prompt = "How good are you at holding conversations?"
+prompt = "What will it be like after I'm gone?"
 response = generate_gpt3_response(prompt)
 print("Got response")
 
+
 count = 1
+
+bestResponse = ""
+bestSentimentScore = -2 #All responses will be (-1 - 1)
+
 for each in response:
+    responseText = each.text
     print("Response: " + str(count))
-    print(each.text)
+    print(responseText)
+    sentimentScore = getSentiment(responseText)
+    print("Sentiment score: " + str(sentimentScore))
+    if (sentimentScore > bestSentimentScore):
+        bestSentimentScore = sentimentScore
+        bestResponse = responseText
     count += 1
+
+print("Best response is: ")
+print(bestResponse)
 
 print("Complete")
