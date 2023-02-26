@@ -27,8 +27,8 @@ async def process_audio(fast_socket: web.WebSocketResponse):
         if 'channel' in data:
             transcript = data['channel']['alternatives'][0]['transcript']
             
-            if "over" in transcript:
-                gptAPI.singleton(transcript.lower())
+            if "over" in transcript.lower():
+                gptAPI.singleton(transcript)
             
             
     

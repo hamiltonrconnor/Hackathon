@@ -54,17 +54,19 @@ def editPrompt(prompt):
     print("Prompt sentiment: " + promptSentiment)
     prePrompt = ""
     if promptSentiment == "Happy":
-        prePrompt = "Answer the following in a cheerful and upbeat way: "
+        prePrompt = "Answer the following in a cheerful and upbeat way for somebody that will die soon: "
     elif promptSentiment == "Angry":
-        prePrompt = "Answer the following in a understanding and sympathetic way: "
+        prePrompt = "Answer the following in a understanding and sympathetic way for somebody that will die soon: "
     elif promptSentiment == "Suprise":
-        prePrompt = "Answer the following in a calming way: "
+        prePrompt = "Answer the following in a calming way for somebody that will die soon: "
     elif promptSentiment == "Sad":
-        prePrompt = "Answer the following in a cheerful and uplifting way: "
+        prePrompt = "Answer the following in a cheerful and uplifting way for somebody that will die soon: "
     elif promptSentiment == "Fear":
-        prePrompt = "Answer the following in a comforting and reassuring way: "   
+        prePrompt = "Answer the following in a comforting and reassuring way for somebody that will die soon: "   
 
     edittedPrompt = prePrompt + prompt
+    edittedPrompt.replace("over","")#Removing stop word from prompt
+
     return edittedPrompt
 
 def getSentiment(responseText):
