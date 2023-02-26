@@ -8,7 +8,7 @@
 
 	<!-- Latest compiled and minified Bootstrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+<script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
 </head>
 <body>
     <h1>Transcribe your voice to text </h1>
@@ -55,7 +55,34 @@
         {% endif %}
 
     </div>
-
+<div>
+    <h2>Music</h2>
+    <p>Music:</p>
+    <audio controls="controls" autoplay="autoplay"></audio>
+    <ul>
+    {% for song in songs %}
+        <li><a href="javascript:void(0);">{{song}}</a></li>
+    {% endfor %}
+    </ul>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            Results:
+            <pre>
+                {% for message in messages %}
+{{ message }}
+                {% endfor %}
+            </pre>
+        {% endif %}
+    {% endwith %}
+    <script type='text/javascript'>
+        {% for song in songs %}
+            $('li').click(function(){
+                var str = $(this).text()
+                $('audio').attr('src', '/static/music/'+str);
+            });
+        {% endfor %}
+    </script>
+</div>
 
 
 
