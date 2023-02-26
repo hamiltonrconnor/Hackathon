@@ -11,16 +11,26 @@ from typing import Dict, Callable
 import gptAPI
 
 
+
+
 load_dotenv()
 
 app = Flask('aioflask')
 
+
 dg_client = Deepgram("9d1da47ae5d55dadfd24fbd079de517c428aac5d")
+
+
 
 async def process_audio(fast_socket: web.WebSocketResponse):
     async def get_transcript(data: Dict) -> None:
         if 'channel' in data:
             transcript = data['channel']['alternatives'][0]['transcript']
+            if "over" in transcript:
+                    stopFlagFile = open("stopFlag.txt","r+")
+                    stopFlagFile.truncate(0)
+                    stopFlagFile.write("1")
+                    stopFlagFile.close()
             with open('log.csv','a') as fd:
                 fd.write(transcript)
                 fd.write("\n")
@@ -58,12 +68,33 @@ async def socket(request):
     while True:
         data = await ws.receive_bytes()
         deepgram_socket.send(data)
+
+        stopFlagFile = open("stopFlag.txt","r+")
+        stopFlag = stopFlagFile.read()
+
+
+        if stopFlag == "1":
+            await (gptAPI.main())
+            stopFlag = "0"
         
-        await (gptAPI.main())
+        stopFlagFile.truncate(0)
+        stopFlagFile.write(stopFlag)
+        stopFlagFile.close()
 
   
 
 if __name__ == "__main__":
+    logFile = open("log.csv","r+")#Cleaning the file from before
+    logFile.truncate(0)
+    logFile.close()
+
+    stopFlagFile = open("stopFlag.txt","r+")
+    stopFlagFile.truncate(0)
+    stopFlagFile.write("0")
+    stopFlagFile.close()
+
+
+
     loop = asyncio.get_event_loop()
     aio_app = web.Application()
     wsgi = WSGIHandler(app)

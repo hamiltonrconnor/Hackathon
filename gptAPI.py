@@ -102,7 +102,7 @@ async def defaultPipeline(index):
 
 
     #await defaultPipeline(len(text)-1)
-    if len(text) >= 8:
+    if len(text) >= 10:
         prompt = text
         prompt = editPrompt(prompt)
         response = generate_gpt3_response(prompt,n=3)
