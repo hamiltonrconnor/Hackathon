@@ -16,6 +16,7 @@ string = ""
 load_dotenv()
 
 app = Flask('aioflask')
+import csv
 
 
 dg_client = Deepgram("9d1da47ae5d55dadfd24fbd079de517c428aac5d")
@@ -24,20 +25,30 @@ dg_client = Deepgram("9d1da47ae5d55dadfd24fbd079de517c428aac5d")
 
 async def process_audio(fast_socket: web.WebSocketResponse):
     async def get_transcript(data: Dict) -> None:
+    
         if 'channel' in data:
             transcript = data['channel']['alternatives'][0]['transcript']
             
-            if "over" in transcript.lower():
-                print("Making API request")
-                gptAPI.singleton(transcript)
             
+                    
+            if transcript:
+                if "over" in transcript.lower():
+                    
+
+                    with open("temp.txt", "a") as myfile:
+                        myfile.write(transcript+"\n")
+                    
+                    
+                await fast_socket.send_str(transcript)
+    
+                
             
     
-        
-            if transcript:
-                await fast_socket.send_str(transcript)
-
     deepgram_socket = await connect_to_deepgram(get_transcript)
+   
+    
+    
+    
 
     return deepgram_socket
 
@@ -46,15 +57,17 @@ async def connect_to_deepgram(transcript_received_handler: Callable[[Dict], None
         socket = await dg_client.transcription.live({'punctuate': True, 'interim_results': False})
         socket.registerHandler(socket.event.CLOSE, lambda c: print(f'Connection closed with code {c}.'))
         socket.registerHandler(socket.event.TRANSCRIPT_RECEIVED, transcript_received_handler)
-
+        
         return socket
     except Exception as e:
         raise Exception(f'Could not open socket: {e}')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    song = os.listdir('static/music')[0]
-    return render_template('index.html',song=song)
+    return render_template('index.html')
+
+
+
 
 async def socket(request):
     ws = web.WebSocketResponse()
@@ -65,8 +78,13 @@ async def socket(request):
     
     
     while True:
-        data = await ws.receive_bytes()
-        deepgram_socket.send(data)
+        try:
+            data = await ws.receive_bytes()
+            deepgram_socket.send(data)
+        except Exception as e:
+            print("1")
+            pass 
+        
         
   
 
@@ -74,7 +92,7 @@ if __name__ == "__main__":
     
 
 
-
+    
     loop = asyncio.get_event_loop()
     aio_app = web.Application()
     wsgi = WSGIHandler(app)
