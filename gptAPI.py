@@ -99,6 +99,7 @@ def singleton(prompt):
     audio_file = "file.mp3"
 
     return_code = subprocess.call(["afplay", audio_file])
+    return 1
 
 
 def defaultPipeline(index):
