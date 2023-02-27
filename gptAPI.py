@@ -1,4 +1,5 @@
 import os
+import platform
 import openai
 from nltk.sentiment import SentimentIntensityAnalyzer
 import nltk
@@ -12,6 +13,8 @@ from playsound import playsound
 
 from pydub import AudioSegment
 from pydub.playback import play
+
+from pygame import mixer
 
 import subprocess
 
@@ -99,8 +102,20 @@ def singleton(prompt):
     var = gTTS(text = response,lang = 'en')
     var.save('file.mp3')
     audio_file = "file.mp3"
-
-    return_code = subprocess.call(["afplay", audio_file])
+    ###Specific for os's
+    operatingSystem = platform.system()
+    if operatingSystem == "Darwin":#MacOS
+        return_code = subprocess.call(["afplay", audio_file])
+    elif operatingSystem == "Linux":
+        print("PLaying Windows mp3")
+        mixer.init()
+        mixer.music.load("file.mp3")
+        mixer.music.play() 
+    elif operatingSystem == "Windows":
+        print("PLaying Windows mp3")
+        mixer.init()
+        mixer.music.load("file.mp3")
+        mixer.music.play()
 
 
 def defaultPipeline(index):
@@ -129,7 +144,7 @@ def defaultPipeline(index):
         response = generate_gpt3_response(prompt,n=3)
         response = getBestResponse(response)
         print("Prompt: " + prompt + "\n" + "Response:" + response)
-        #return responsie
+        #return response
 	
 	
 
