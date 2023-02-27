@@ -154,12 +154,24 @@ def defaultPipeline(index):
 
 
 def main():
-    defaultPipeline()
+    count =0 
+    while True:
+        
+         f = open('temp.txt','r')
+         lines = f.readlines()
+         if len(lines) > count:
+             if len(lines[0])>0:
+                 print(lines[0])
+                 singleton(lines[0])
+             count +=1
+                 
+         
+    
     
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
     #print("Starting")
     #prompt = "This is so unfair, I'm a good person! Why am I dying so young?"
     #prompt = editPrompt(prompt)
