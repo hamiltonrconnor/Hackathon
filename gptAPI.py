@@ -101,7 +101,7 @@ def singleton(prompt):
     response = getBestResponse(response)
     if len(response) >0:
         
-        var = gTTS(text = response,lang = 'en')
+        var = gTTS(text = response,lang = 'en',tld='com.au')
         var.save('file.mp3')
         audio_file = "file.mp3"
         ###Specific for os's
