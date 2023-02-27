@@ -32,11 +32,11 @@ async def process_audio(fast_socket: web.WebSocketResponse):
             
                     
             if transcript:
-                if "over" in transcript.lower():
+                
                     
 
-                    with open("temp.txt", "a") as myfile:
-                        myfile.write(transcript+"\n")
+                with open("temp.txt", "a") as myfile:
+                    myfile.write(transcript+"\n")
                     
                     
                 await fast_socket.send_str(transcript)

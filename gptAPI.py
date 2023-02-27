@@ -99,23 +99,25 @@ def singleton(prompt):
         
     response = generate_gpt3_response(prompt,n=3)
     response = getBestResponse(response)
-    var = gTTS(text = response,lang = 'en')
-    var.save('file.mp3')
-    audio_file = "file.mp3"
-    ###Specific for os's
-    operatingSystem = platform.system()
-    if operatingSystem == "Darwin":#MacOS
-        return_code = subprocess.call(["afplay", audio_file])
-    elif operatingSystem == "Linux":
-        print("PLaying Windows mp3")
-        mixer.init()
-        mixer.music.load("file.mp3")
-        mixer.music.play() 
-    elif operatingSystem == "Windows":
-        print("PLaying Windows mp3")
-        mixer.init()
-        mixer.music.load("file.mp3")
-        mixer.music.play()
+    if len(response) >0:
+        
+        var = gTTS(text = response,lang = 'en')
+        var.save('file.mp3')
+        audio_file = "file.mp3"
+        ###Specific for os's
+        operatingSystem = platform.system()
+        if operatingSystem == "Darwin":#MacOS
+            return_code = subprocess.call(["afplay", audio_file])
+        elif operatingSystem == "Linux":
+            print("PLaying Windows mp3")
+            mixer.init()
+            mixer.music.load("file.mp3")
+            mixer.music.play() 
+        elif operatingSystem == "Windows":
+            print("PLaying Windows mp3")
+            mixer.init()
+            mixer.music.load("file.mp3")
+            mixer.music.play()
 
 
 def defaultPipeline(index):
@@ -154,16 +156,24 @@ def defaultPipeline(index):
 
 
 def main():
-    count =0 
+    count =0
+    f = open('temp.txt','w+')
+    f.truncate(0)
+    f.close()
     while True:
-        
-         f = open('temp.txt','r')
-         lines = f.readlines()
-         if len(lines) > count:
-             if len(lines[0])>0:
-                 print(lines[0])
-                 singleton(lines[0])
-             count +=1
+         try:
+             f = open('temp.txt','r')
+             lines = f.read()
+             f.close()
+             phrases = lines.replace('\n', '').lower().split("over")
+             phrases = [i for i in phrases if len(i)>3]
+            
+             if len(phrases) > count:
+                 
+                 singleton(phrases[-1])
+                 count +=1
+         except:
+            pass
                  
          
     
